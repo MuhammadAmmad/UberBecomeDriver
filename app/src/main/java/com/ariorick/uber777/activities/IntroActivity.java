@@ -6,6 +6,8 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.ariorick.uber777.R;
@@ -20,10 +22,9 @@ public class IntroActivity extends AppCompatActivity {
 
         Button button = (Button) findViewById(R.id.startButton);
         button.setClickable(false);
-        //button.setAlpha(0);
 
-        ImageView imageView = (ImageView) findViewById(R.id.logo);
-        imageView.startAnimation(new IntroAnimation(this, null, button, new TextView(this)));
+        View logo = findViewById(R.id.logo);
+        logo.startAnimation(new IntroAnimation(this, null, button, new TextView(this)));
 
     }
 }
