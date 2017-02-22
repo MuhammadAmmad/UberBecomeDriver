@@ -6,5 +6,7 @@
     <color name="grey">#52505e</color>
     <color name="almost_black">#18101d</color>
     <color name="white">#FFFFFF</color>
+    <color name="almost_white">#E8EcEd</color>
+    <color name="violet">#2e2a38</color>
 
 </resources>

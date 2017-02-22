@@ -1,11 +1,14 @@
 package com.ariorick.uber777.utils;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.net.Uri;
 import android.support.v7.widget.RecyclerView;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.ariorick.uber777.R;
@@ -14,13 +17,14 @@ import com.squareup.picasso.Picasso;
 import java.util.ArrayList;
 
 
-/**
- * Created by arior on 30.01.2017.
- */
 
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private ArrayList<Uri> mDataset;
     private Context context;
+    private boolean plusIsNeeded = false;
+    private View.OnClickListener clickCallback;
+
+    private int pictureSize = 100;
 
     // Provide a reference to the views for each data item
     // Complex data items may need more than one view per item, and
@@ -37,14 +41,26 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     public void addPlus() {
-        mDataset.add(Uri.parse("android.resource://com.ariorick.gallery/drawable/plus"));
+        if (plusIsNeeded)
+            mDataset.add(Uri.parse("android.resource://com.ariorick.uber777/drawable/add"));
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(ArrayList<Uri> myDataset, Context context) {
-        this.context = context;
+    public MyAdapter(ArrayList<Uri> myDataset, Context context, boolean plusIsNeeded, View.OnClickListener clickCallback) {
         mDataset = myDataset;
+        this.context = context;
+        this.plusIsNeeded = plusIsNeeded;
+        this.clickCallback = clickCallback;
         //addPlus();
+
+
+        WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+        Display display = wm.getDefaultDisplay();
+        Point size = new Point();
+        display.getSize(size);
+        int width = size.x;
+        pictureSize = (int) (width / 3.7);
+
     }
 
     public void add(Uri... uri) {
@@ -57,8 +73,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     // Create new views (invoked by the layout manager)
     @Override
-    public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent,
-                                                   int viewType) {
+    public MyAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         // create a new view
         View v = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.item, parent, false);
@@ -73,10 +88,23 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
         ImageView photo = (ImageView) holder.view.findViewById(R.id.photo);
+        photo.setOnClickListener(clickCallback);
         ImageView delete = (ImageView) holder.view.findViewById(R.id.delete);
+
+
+        ViewGroup.LayoutParams photoParams = photo.getLayoutParams();
+        photoParams.height = pictureSize;
+        photoParams.width = pictureSize;
+        photo.setLayoutParams(photoParams);
+
+        ViewGroup.LayoutParams deleteParams = delete.getLayoutParams();
+        deleteParams.height = (int) (pictureSize * 0.3f);
+        deleteParams.width = (int) (pictureSize * 0.3f);
+
         Picasso.with(context)
                 .load(mDataset.get(position))
                 .fit()
+                .centerCrop()
                 .into(photo);
 
         if (position == getItemCount() - 1) {

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
@@ -27,7 +28,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CarPickerActivity extends AppCompatActivity {
+public class CarPickerActivity extends AppCompatActivity implements View.OnClickListener {
 
     private String TAG = "CarPickerActivity";
     String brandID = "0";
@@ -44,11 +45,25 @@ public class CarPickerActivity extends AppCompatActivity {
         setContentView(R.layout.activity_car_picker);
 
 
+        /*Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar2);
+        setSupportActionBar(toolbar);
+        ActionBar ab = getSupportActionBar();
+        ab.setDisplayHomeAsUpEnabled(true);  */
+
+
+
         if (!alreadyOpened())
             ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).
                     toggleSoftInput(InputMethodManager.SHOW_FORCED, InputMethodManager.HIDE_IMPLICIT_ONLY);
 
         workWithAutoComplete1();
+
+        findViewById(R.id.continueToDocs).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(CarPickerActivity.this, DocumentsActivity.class));
+            }
+        });
 
 
         recycler = (RecyclerView) findViewById(R.id.recycle);
@@ -58,17 +73,19 @@ public class CarPickerActivity extends AppCompatActivity {
         layoutManager = new GridLayoutManager(this, 3);
         recycler.setLayoutManager(layoutManager);
 
-        adapter = new MyAdapter(photos, getApplicationContext());
+        adapter = new MyAdapter(photos, getApplicationContext(), true, this);
         adapter.addPlus();
         recycler.setAdapter(adapter);
 
     }
 
 
+    @Override
     public void onClick(View v) {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
-        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        if (Build.VERSION.SDK_INT >= 18)
+            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         intent.setType("image/*");
         Intent chooser = Intent.createChooser(intent, getString(R.string.choose_photo));
@@ -118,10 +135,10 @@ public class CarPickerActivity extends AppCompatActivity {
         auto.setThreshold(1);
         auto.setAdapter(adapter);
         auto.setHint(getString(R.string.brand_example));
+        auto.dismissDropDown();
         //auto.requestFocus();
 
 
-        final List<String[]> tempBrands = csv;
         auto.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -195,6 +212,7 @@ public class CarPickerActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         load();
+        ((AutoCompleteTextView) findViewById(R.id.brand)).dismissDropDown();
     }
 
     public void save() {
