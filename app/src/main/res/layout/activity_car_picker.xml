@@ -147,9 +147,11 @@
                 android:layout_height="match_parent"
                 android:layout_below="@+id/textView4"
                 android:background="@color/almost_white"
+                android:clipToPadding="false"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="10dp"
-                android:id="@+id/recycle" />
+                android:id="@+id/recycle"
+                android:padding="5dp" />
         </RelativeLayout>
 
     </android.support.v7.widget.CardView>

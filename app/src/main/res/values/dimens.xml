@@ -7,4 +7,5 @@
     <dimen name="text_margin">0dp</dimen>
     <dimen name="card_margin">10dp</dimen>
     <dimen name="card_padding">10dp</dimen>
+    <dimen name="item_offset">5dp</dimen>
 </resources>

@@ -50,6 +50,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_below="@+id/textView5"
+                android:padding="5dp"
                 android:background="@color/almost_white"
                 android:id="@+id/docsRecycler" />
         </RelativeLayout>

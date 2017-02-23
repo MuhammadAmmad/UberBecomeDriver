@@ -54,4 +54,36 @@ public class PersonalDataActivity extends AppCompatActivity {
         }
         return result;
     }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        save();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        load();
+    }
+
+    public void save() {
+        SharedPreferences prefs = getSharedPreferences("info", MODE_PRIVATE);
+        SharedPreferences.Editor editor = prefs.edit();
+        editor.putString("surname", ((EditText) findViewById(R.id.surname)).getText().toString());
+        editor.putString("name", ((EditText) findViewById(R.id.name)).getText().toString());
+        editor.putString("second_name", ((EditText) findViewById(R.id.second_name)).getText().toString());
+        editor.putString("phone", ((EditText) findViewById(R.id.phone)).getText().toString());
+        editor.putString("email", ((EditText) findViewById(R.id.email)).getText().toString());
+        editor.apply();
+    }
+
+    public void load() {
+        SharedPreferences prefs = getSharedPreferences("info", MODE_PRIVATE);
+        ((EditText) findViewById(R.id.surname)).setText(prefs.getString("surname", ""));
+        ((EditText) findViewById(R.id.name)).setText(prefs.getString("name", ""));
+        ((EditText) findViewById(R.id.second_name)).setText(prefs.getString("second_name", ""));
+        ((EditText) findViewById(R.id.phone)).setText(prefs.getString("phone", ""));
+        ((EditText) findViewById(R.id.email)).setText(prefs.getString("email", ""));
+    }
 }

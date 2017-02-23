@@ -21,7 +21,7 @@ import java.util.ArrayList;
 public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     private ArrayList<Uri> mDataset;
     private Context context;
-    private boolean plusIsNeeded = false;
+    private boolean editable = false;
     private View.OnClickListener clickCallback;
 
     private int pictureSize = 100;
@@ -41,15 +41,15 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
     }
 
     public void addPlus() {
-        if (plusIsNeeded)
+        if (editable)
             mDataset.add(Uri.parse("android.resource://com.ariorick.uber777/drawable/add"));
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
-    public MyAdapter(ArrayList<Uri> myDataset, Context context, boolean plusIsNeeded, View.OnClickListener clickCallback) {
+    public MyAdapter(ArrayList<Uri> myDataset, Context context, boolean editable, View.OnClickListener clickCallback) {
         mDataset = myDataset;
         this.context = context;
-        this.plusIsNeeded = plusIsNeeded;
+        this.editable = editable;
         this.clickCallback = clickCallback;
         //addPlus();
 
@@ -59,7 +59,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         Point size = new Point();
         display.getSize(size);
         int width = size.x;
-        pictureSize = (int) (width / 3.7);
+        pictureSize = (int) (width / 3.9);
 
     }
 
@@ -90,6 +90,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         ImageView photo = (ImageView) holder.view.findViewById(R.id.photo);
         photo.setOnClickListener(clickCallback);
         ImageView delete = (ImageView) holder.view.findViewById(R.id.delete);
+        if (!editable) {
+            delete.setVisibility(View.GONE);
+            delete.setClickable(false);
+        }
 
 
         ViewGroup.LayoutParams photoParams = photo.getLayoutParams();

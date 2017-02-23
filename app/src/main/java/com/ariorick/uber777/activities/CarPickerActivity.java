@@ -21,6 +21,7 @@ import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 
 import com.ariorick.uber777.R;
+import com.ariorick.uber777.utils.ItemOffsetDecoration;
 import com.ariorick.uber777.utils.MyAdapter;
 import com.opencsv.CSVReader;
 
@@ -35,8 +36,7 @@ public class CarPickerActivity extends AppCompatActivity implements View.OnClick
 
     private RecyclerView recycler;
     private MyAdapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
-    private ArrayList<Uri> photos = new ArrayList<>();
+    private ArrayList<Uri> carPhotos = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +51,9 @@ public class CarPickerActivity extends AppCompatActivity implements View.OnClick
         ab.setDisplayHomeAsUpEnabled(true);  */
 
 
+        load();
+        ((AutoCompleteTextView) findViewById(R.id.brand)).dismissDropDown();
+
 
         if (!alreadyOpened())
             ((InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE)).
@@ -58,6 +61,7 @@ public class CarPickerActivity extends AppCompatActivity implements View.OnClick
 
         workWithAutoComplete1();
 
+        // button to next activity
         findViewById(R.id.continueToDocs).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -66,14 +70,17 @@ public class CarPickerActivity extends AppCompatActivity implements View.OnClick
         });
 
 
+        // managing with recycler
         recycler = (RecyclerView) findViewById(R.id.recycle);
         recycler.setHasFixedSize(true);
 
 
-        layoutManager = new GridLayoutManager(this, 3);
-        recycler.setLayoutManager(layoutManager);
+        recycler.setLayoutManager(new GridLayoutManager(this, 3));
 
-        adapter = new MyAdapter(photos, getApplicationContext(), true, this);
+        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.item_offset);
+        recycler.addItemDecoration(itemDecoration);
+
+        adapter = new MyAdapter(carPhotos, getApplicationContext(), true, this);
         adapter.addPlus();
         recycler.setAdapter(adapter);
 
@@ -211,26 +218,40 @@ public class CarPickerActivity extends AppCompatActivity implements View.OnClick
     @Override
     protected void onResume() {
         super.onResume();
-        load();
-        ((AutoCompleteTextView) findViewById(R.id.brand)).dismissDropDown();
+
     }
 
     public void save() {
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("info", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
         editor.putString("brandID", brandID);
         editor.putString("brand", ((AutoCompleteTextView) findViewById(R.id.brand)).getText().toString());
         editor.putString("model", ((AutoCompleteTextView) findViewById(R.id.model)).getText().toString());
         editor.putString("year", ((EditText) findViewById(R.id.year)).getText().toString());
+
+        editor.putInt("car_photos_size", carPhotos.size() - 1);
+        for (int i = 0; i < carPhotos.size() - 1; i++) {
+            editor.putString("car_photo" + i, carPhotos.get(i).toString());
+        }
+
         editor.apply();
     }
 
     public void load() {
-        SharedPreferences prefs = getPreferences(MODE_PRIVATE);
+        SharedPreferences prefs = getSharedPreferences("info", MODE_PRIVATE);
         brandID = prefs.getString("brandID", "0");
         ((AutoCompleteTextView) findViewById(R.id.brand)).setText(prefs.getString("brand", ""));
         ((AutoCompleteTextView) findViewById(R.id.model)).setText(prefs.getString("model", ""));
         ((EditText) findViewById(R.id.year)).setText(prefs.getString("year", ""));
+
+        carPhotos = new ArrayList<>();
+
+        for (int i = 0; i < prefs.getInt("car_photos_size", 0); i++) {
+            String uri = prefs.getString("car_photo" + i, "");
+            if (!uri.equals(""))
+                carPhotos.add(Uri.parse(uri));
+        }
+
     }
 
     public boolean alreadyOpened() {

@@ -11,6 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.ariorick.uber777.R;
+import com.ariorick.uber777.utils.ItemOffsetDecoration;
 import com.ariorick.uber777.utils.MyAdapter;
 
 import java.util.ArrayList;
@@ -39,8 +40,10 @@ public class DocumentsActivity extends AppCompatActivity implements View.OnClick
         recycler.setHasFixedSize(true);
 
 
-        layoutManager = new GridLayoutManager(this, 3);
-        recycler.setLayoutManager(layoutManager);
+        recycler.setLayoutManager(new GridLayoutManager(this, 3));
+
+        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.item_offset);
+        recycler.addItemDecoration(itemDecoration);
 
         adapter = new MyAdapter(photos, getApplicationContext(), true, this);
         adapter.addPlus();
