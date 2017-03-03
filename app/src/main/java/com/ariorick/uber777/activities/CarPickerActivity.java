@@ -1,13 +1,19 @@
 package com.ariorick.uber777.activities;
 
 import android.content.ClipData;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatTextView;
 import android.support.v7.widget.GridLayoutManager;
@@ -26,6 +32,7 @@ import com.ariorick.uber777.utils.ItemOffsetDecoration;
 import com.ariorick.uber777.utils.MyAdapter;
 import com.opencsv.CSVReader;
 
+import java.io.File;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -39,6 +46,8 @@ public class CarPickerActivity extends AppCompatActivity implements View.OnClick
     private RecyclerView recycler;
     private MyAdapter adapter;
     private ArrayList<Uri> carPhotos = new ArrayList<>();
+
+    private Uri outputFileUri;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -132,13 +141,37 @@ public class CarPickerActivity extends AppCompatActivity implements View.OnClick
 
     @Override
     public void onClick(View v) {
+        final File root = new File(Environment.getExternalStorageDirectory() + File.separator + "MyDir" + File.separator);
+        root.mkdirs();
+        final String fname = "img_" + System.currentTimeMillis() + ".jpg";
+        final File sdImageMainDirectory = new File(root, fname);
+        outputFileUri = Uri.fromFile(sdImageMainDirectory);
+
+        // Camera.
+        final List<Intent> cameraIntents = new ArrayList<>();
+        final Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        final PackageManager packageManager = getPackageManager();
+        final List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
+        for (ResolveInfo res : listCam) {
+            final String packageName = res.activityInfo.packageName;
+            final Intent intent = new Intent(captureIntent);
+            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
+            intent.setPackage(packageName);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            cameraIntents.add(intent);
+        }
+
+        // gallery
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.addCategory(Intent.CATEGORY_OPENABLE);
         if (Build.VERSION.SDK_INT >= 18)
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
         intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
         intent.setType("image/*");
+
         Intent chooser = Intent.createChooser(intent, getString(R.string.choose_photo));
+        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[cameraIntents.size()]));
+
         startActivityForResult(chooser, 1);
     }
 
@@ -147,7 +180,14 @@ public class CarPickerActivity extends AppCompatActivity implements View.OnClick
         super.onActivityResult(requestCode, resultCode, data);
 
         if (resultCode == RESULT_OK) {
-            adapter.add(parseUri(data.getClipData(), data.getData()));
+
+            if (data != null)
+                adapter.add(parseUri(data.getClipData(), data.getData()));
+            else if (outputFileUri != null) {
+                Log.i(TAG, outputFileUri.toString());
+                adapter.add(outputFileUri);
+                outputFileUri = null;
+            }
         }
     }
 

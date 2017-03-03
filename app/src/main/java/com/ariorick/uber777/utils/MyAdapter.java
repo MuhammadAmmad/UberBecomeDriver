@@ -39,7 +39,7 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     public void addPlus() {
         if (editable)
-            mDataset.add(Uri.parse("android.resource://com.ariorick.uber777/drawable/add"));
+            mDataset.add(Uri.parse("android.resource://com.ariorick.uber777/drawable/universal_add"));
     }
 
     // Provide a suitable constructor (depends on the kind of dataset)
@@ -112,9 +112,13 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         if (position == getItemCount() - 1) {
             delete.setClickable(false);
             delete.setVisibility(View.GONE);
-            photo.setClickable(true);
+            if (editable) {
+                photo.setClickable(true);
+                photo.setAlpha(0.8f);
+            }
         } else {
             photo.setClickable(false);
+            photo.setAlpha(1f);
             if (editable) {
                 delete.setVisibility(View.VISIBLE);
                 delete.setClickable(true);

@@ -43,7 +43,7 @@ public class SendActivity extends AppCompatActivity {
         try {
             SendTask sendTask;
             sendTask = new SendTask(getApplicationContext(), "Новый водитель", name + "\n" + phone + "\n" + email + "\n" + carName,
-                    "UBER777 приложение", "rabotauber777@gmail.com", photos, getString(R.string.google_user), getString(R.string.google_password), dialog);
+                    "UBER777", "arior.i@ya.ru", photos, getString(R.string.google_user), getString(R.string.google_password), dialog);
             sendTask.execute();
         } catch (Exception e) {
             Log.e("Exception", e.getMessage());
@@ -79,7 +79,7 @@ public class SendActivity extends AppCompatActivity {
         // Docs
         ArrayList<Uri> docsPhotos = new ArrayList<>();
 
-        for (int i = 0; i < prefs.getInt("doc_photos_size", 0); i++) {
+        for (int i = 0; i < 5; i++) {
             String uri = prefs.getString("doc_photo" + i, "");
             if (!uri.equals(""))
                 docsPhotos.add(Uri.parse(uri));

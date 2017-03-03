@@ -1,29 +1,33 @@
 package com.ariorick.uber777.activities;
 
-import android.content.ClipData;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
+import android.os.Parcelable;
+import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.GridLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.CardView;
 import android.view.View;
 
 import com.ariorick.uber777.R;
-import com.ariorick.uber777.utils.ItemOffsetDecoration;
-import com.ariorick.uber777.utils.MyAdapter;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
-public class DocumentsActivity extends AppCompatActivity implements View.OnClickListener {
+public class DocumentsActivity extends AppCompatActivity {
 
-    private RecyclerView recycler;
-    private MyAdapter adapter;
-    private RecyclerView.LayoutManager layoutManager;
-    private ArrayList<Uri> docsPhotos = new ArrayList<>();
+
+    private Uri outputFileUri;
+
+    private Uri[] docsPhotos = new Uri[5];
+    private int clickedViewnumber = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,41 +43,104 @@ public class DocumentsActivity extends AppCompatActivity implements View.OnClick
         });
 
         load();
+    }
+
+    public void addPhoto(int docNumber) {
+        clickedViewnumber = docNumber - 1;
+
+        final File root = new File(Environment.getExternalStorageDirectory() + File.separator + "MyDir" + File.separator);
+        root.mkdirs();
+        final String fname = "img_" + System.currentTimeMillis() + ".jpg";
+        final File sdImageMainDirectory = new File(root, fname);
+        outputFileUri = Uri.fromFile(sdImageMainDirectory);
+
+        // Camera.
+        final List<Intent> cameraIntents = new ArrayList<>();
+        final Intent captureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+        final PackageManager packageManager = getPackageManager();
+        final List<ResolveInfo> listCam = packageManager.queryIntentActivities(captureIntent, 0);
+        for (ResolveInfo res : listCam) {
+            final String packageName = res.activityInfo.packageName;
+            final Intent intent = new Intent(captureIntent);
+            intent.setComponent(new ComponentName(res.activityInfo.packageName, res.activityInfo.name));
+            intent.setPackage(packageName);
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, outputFileUri);
+            cameraIntents.add(intent);
+        }
+
+        // gallery
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
+        intent.setType("image/*");
+
+        Intent chooser = Intent.createChooser(intent, getString(R.string.choose_photo));
+        chooser.putExtra(Intent.EXTRA_INITIAL_INTENTS, cameraIntents.toArray(new Parcelable[cameraIntents.size()]));
+
+        startActivityForResult(chooser, 1);
+    }
 
 
-        recycler = (RecyclerView) findViewById(R.id.docsRecycler);
-        recycler.setHasFixedSize(true);
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.add1:
+                addPhoto(1);
+                break;
+            case R.id.add2:
+                addPhoto(2);
+                break;
+            case R.id.add3:
+                addPhoto(3);
+                break;
+            case R.id.add4:
+                addPhoto(4);
+                break;
+            case R.id.add5:
+                addPhoto(5);
+                break;
 
-
-        recycler.setLayoutManager(new GridLayoutManager(this, 3));
-
-        ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.item_offset);
-        recycler.addItemDecoration(itemDecoration);
-
-        adapter = new MyAdapter(docsPhotos, getApplicationContext(), true, this);
-        adapter.addPlus();
-        recycler.setAdapter(adapter);
+        }
 
     }
 
-    @Override
-    public void onClick(View v) {
-        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        if (Build.VERSION.SDK_INT >= 18)
-            intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-        intent.putExtra(Intent.EXTRA_LOCAL_ONLY, true);
-        intent.setType("image/*");
-        Intent chooser = Intent.createChooser(intent, getString(R.string.choose_photo));
-        startActivityForResult(chooser, 1);
+    public void setChecked(int number) {
+        switch (number) {
+            case 1:
+                setMarkVisible(R.id.card1);
+                break;
+            case 2:
+                setMarkVisible(R.id.card2);
+                break;
+            case 3:
+                setMarkVisible(R.id.card3);
+                break;
+            case 4:
+                setMarkVisible(R.id.card4);
+                break;
+            case 5:
+                setMarkVisible(R.id.card5);
+                break;
+        }
+    }
+
+    private void setMarkVisible(int id) {
+        CardView cardView = (CardView) findViewById(id);
+        cardView.findViewById(R.id.check).setVisibility(View.VISIBLE);
     }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
         if (resultCode == RESULT_OK) {
-            adapter.add(parseUri(data.getClipData(), data.getData()));
+
+            if (data != null) {
+                docsPhotos[clickedViewnumber] = data.getData();
+                setChecked(clickedViewnumber + 1);
+            } else if (outputFileUri != null) {
+                docsPhotos[clickedViewnumber] = outputFileUri;
+                outputFileUri = null;
+                setChecked(clickedViewnumber + 1);
+            }
         }
     }
 
@@ -81,9 +148,9 @@ public class DocumentsActivity extends AppCompatActivity implements View.OnClick
         SharedPreferences prefs = getSharedPreferences("info", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
-        editor.putInt("doc_photos_size", docsPhotos.size() - 1);
-        for (int i = 0; i < docsPhotos.size() - 1; i++) {
-            editor.putString("doc_photo" + i, docsPhotos.get(i).toString());
+        for (int i = 0; i < 5; i++) {
+            if (docsPhotos[i] != null)
+                editor.putString("doc_photo" + i, docsPhotos[i].toString());
         }
 
         editor.apply();
@@ -92,12 +159,14 @@ public class DocumentsActivity extends AppCompatActivity implements View.OnClick
     public void load() {
         SharedPreferences prefs = getSharedPreferences("info", MODE_PRIVATE);
 
-        docsPhotos = new ArrayList<>();
+        docsPhotos = new Uri[5];
 
-        for (int i = 0; i < prefs.getInt("doc_photos_size", 0); i++) {
+        for (int i = 0; i < 5; i++) {
             String uri = prefs.getString("doc_photo" + i, "");
-            if (!uri.equals(""))
-                docsPhotos.add(Uri.parse(uri));
+            if (!uri.equals("")) {
+                docsPhotos[i] = Uri.parse(uri);
+                setChecked(i + 1);
+            }
         }
 
     }
@@ -108,16 +177,4 @@ public class DocumentsActivity extends AppCompatActivity implements View.OnClick
         save();
     }
 
-    private Uri[] parseUri(ClipData clipData, Uri uri) {
-        if (clipData != null) {
-            Uri[] uris = new Uri[clipData.getItemCount()];
-            for (int i = 0; i < uris.length; i++) {
-                uris[i] = clipData.getItemAt(i).getUri();
-            }
-
-            return uris;
-        }
-
-        return new Uri[]{uri};
-    }
 }

@@ -117,7 +117,7 @@ public class CheckActivity extends AppCompatActivity {
         // Docs
         docsPhotos = new ArrayList<>();
 
-        for (int i = 0; i < prefs.getInt("doc_photos_size", 0); i++) {
+        for (int i = 0; i < 5; i++) {
             String uri = prefs.getString("doc_photo" + i, "");
             if (!uri.equals(""))
                 docsPhotos.add(Uri.parse(uri));

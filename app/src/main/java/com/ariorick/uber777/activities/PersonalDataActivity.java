@@ -52,20 +52,11 @@ public class PersonalDataActivity extends AppCompatActivity {
             return false;
         if (!editTextIsEmpty(findViewById(R.id.name)))
             return false;
-        if (!phoneIsFine(findViewById(R.id.phone)))
+        if (!editTextIsEmpty(findViewById(R.id.phone)))
             return false;
         if (!editTextIsEmpty(findViewById(R.id.email)))
             return false;
 
-        return true;
-    }
-
-    public boolean phoneIsFine(View view) {
-        TextView edit = (TextView) view;
-        if (edit.getText().toString().length() != 12) {
-            edit.setError("Телефон должен быть в формате +79105553377");
-            return false;
-        }
         return true;
     }
 
