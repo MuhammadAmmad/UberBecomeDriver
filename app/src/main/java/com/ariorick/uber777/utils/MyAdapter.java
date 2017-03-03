@@ -12,7 +12,7 @@ import android.view.WindowManager;
 import android.widget.ImageView;
 
 import com.ariorick.uber777.R;
-import com.squareup.picasso.Picasso;
+import com.bumptech.glide.Glide;
 
 import java.util.ArrayList;
 
@@ -26,9 +26,6 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
 
     private int pictureSize = 100;
 
-    // Provide a reference to the views for each data item
-    // Complex data items may need more than one view per item, and
-    // you provide access to all the views for a data item in a view holder
 
     static class ViewHolder extends RecyclerView.ViewHolder {
         // each data item is just a string in this case
@@ -105,11 +102,12 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
         deleteParams.height = (int) (pictureSize * 0.3f);
         deleteParams.width = (int) (pictureSize * 0.3f);
 
-        Picasso.with(context)
+
+        Glide.with(context)
                 .load(mDataset.get(position))
-                .fit()
                 .centerCrop()
                 .into(photo);
+
 
         if (position == getItemCount() - 1) {
             delete.setClickable(false);
@@ -117,6 +115,10 @@ public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
             photo.setClickable(true);
         } else {
             photo.setClickable(false);
+            if (editable) {
+                delete.setVisibility(View.VISIBLE);
+                delete.setClickable(true);
+            }
         }
 
         delete.setOnClickListener(new View.OnClickListener() {

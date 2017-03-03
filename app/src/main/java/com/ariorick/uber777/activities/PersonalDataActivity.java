@@ -3,6 +3,7 @@ package com.ariorick.uber777.activities;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.ariorick.uber777.R;
 
@@ -21,6 +23,7 @@ public class PersonalDataActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_personal_data);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
@@ -35,13 +38,46 @@ public class PersonalDataActivity extends AppCompatActivity {
         findViewById(R.id.continueToCars).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(getApplicationContext(), CarPickerActivity.class));
+                if (everythingIsFine())
+                    startActivity(new Intent(getApplicationContext(), CarPickerActivity.class));
             }
         });
 
         EditText phone = (EditText) findViewById(R.id.phone);
         //phone.setBackground(ContextCompat.getDrawable(this, R.drawable.redborder));
     }
+
+    public boolean everythingIsFine() {
+        if (!editTextIsEmpty(findViewById(R.id.surname)))
+            return false;
+        if (!editTextIsEmpty(findViewById(R.id.name)))
+            return false;
+        if (!phoneIsFine(findViewById(R.id.phone)))
+            return false;
+        if (!editTextIsEmpty(findViewById(R.id.email)))
+            return false;
+
+        return true;
+    }
+
+    public boolean phoneIsFine(View view) {
+        TextView edit = (TextView) view;
+        if (edit.getText().toString().length() != 12) {
+            edit.setError("Телефон должен быть в формате +79105553377");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean editTextIsEmpty(View editText) {
+        TextView edit = (TextView) editText;
+        if (edit.getText().toString().length() == 0) {
+            edit.setError("Обязательное поле");
+            return false;
+        }
+        return true;
+    }
+
 
     public boolean alreadyOpened() {
         SharedPreferences prefs = getPreferences(MODE_PRIVATE);

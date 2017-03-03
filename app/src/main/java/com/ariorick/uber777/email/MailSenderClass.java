@@ -18,7 +18,7 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
-public class MailSenderClass extends javax.mail.Authenticator {
+class MailSenderClass extends javax.mail.Authenticator {
     private String mailhost = "smtp.gmail.com";
     private String user;
     private String password;
@@ -27,7 +27,7 @@ public class MailSenderClass extends javax.mail.Authenticator {
     private Multipart _multipart;
 
 
-    public MailSenderClass(String user, String password) {
+    MailSenderClass(String user, String password) {
         this.user = user;
         this.password = password;
 

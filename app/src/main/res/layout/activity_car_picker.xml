@@ -111,6 +111,7 @@
                 android:layout_height="wrap_content"
                 android:inputType="number"
                 android:ems="10"
+                android:maxLength="4"
                 android:imeOptions="actionDone"
                 android:id="@+id/year"
                 android:layout_alignTop="@+id/textView3"

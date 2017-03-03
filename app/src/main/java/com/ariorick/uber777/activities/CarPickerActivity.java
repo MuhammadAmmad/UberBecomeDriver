@@ -19,6 +19,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.ariorick.uber777.R;
 import com.ariorick.uber777.utils.ItemOffsetDecoration;
@@ -27,6 +28,7 @@ import com.opencsv.CSVReader;
 
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 public class CarPickerActivity extends AppCompatActivity implements View.OnClickListener {
@@ -65,7 +67,8 @@ public class CarPickerActivity extends AppCompatActivity implements View.OnClick
         findViewById(R.id.continueToDocs).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(CarPickerActivity.this, DocumentsActivity.class));
+                if (everythingIsFine())
+                    startActivity(new Intent(CarPickerActivity.this, DocumentsActivity.class));
             }
         });
 
@@ -84,6 +87,46 @@ public class CarPickerActivity extends AppCompatActivity implements View.OnClick
         adapter.addPlus();
         recycler.setAdapter(adapter);
 
+    }
+
+    public boolean everythingIsFine() {
+        if (!editTextIsEmpty(findViewById(R.id.brand)))
+            return false;
+        if (!editTextIsEmpty(findViewById(R.id.model)))
+            return false;
+        if (!yearIsFine(findViewById(R.id.year)))
+            return false;
+        /*
+        if (carPhotos.size() < 2){
+            Toast.makeText(CarPickerActivity.this, "Необходимо добавить хотя бы две фотографии", Toast.LENGTH_SHORT).show();
+            return false;
+        }
+        */
+
+        return true;
+    }
+
+    public boolean yearIsFine(View view) {
+        TextView edit = (TextView) view;
+        if (edit.getText().toString().length() != 4) {
+            edit.setError("Год должен состоять из четырёх цифр");
+            return false;
+        }
+        if (Integer.parseInt(edit.getText().toString()) > Calendar.getInstance().get(Calendar.YEAR)) {
+            edit.setError("Вы обещаете купить машину в будущем? :)");
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean editTextIsEmpty(View editText) {
+        TextView edit = (TextView) editText;
+        if (edit.getText().toString().length() == 0) {
+            edit.setError("Обязательное поле");
+            return false;
+        }
+        return true;
     }
 
 

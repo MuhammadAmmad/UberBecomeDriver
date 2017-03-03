@@ -1,6 +1,8 @@
 package com.ariorick.uber777.activities;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ActivityInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -8,6 +10,7 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.View;
 import android.widget.TextView;
 
 import com.ariorick.uber777.R;
@@ -18,31 +21,61 @@ import java.util.ArrayList;
 
 public class CheckActivity extends AppCompatActivity {
 
-    private RecyclerView recycler;
-    private MyAdapter adapter;
+    private RecyclerView carRecycler;
+    private MyAdapter carAdapter;
+    private RecyclerView docsRecycler;
+    private MyAdapter docsAdapter;
     private ArrayList<Uri> carPhotos = new ArrayList<>();
+    private ArrayList<Uri> docsPhotos = new ArrayList<>();
+
+    String name = "";
+    String carName = "";
+    String phone = "";
+    String email = "";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         setContentView(R.layout.activity_check);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         load();
 
-        recycler = (RecyclerView) findViewById(R.id.carRecycler);
-        recycler.setHasFixedSize(true);
+        carRecycler = (RecyclerView) findViewById(R.id.carRecycler);
+        carRecycler.setHasFixedSize(true);
+        carRecycler.setNestedScrollingEnabled(false);
 
-
-        recycler.setLayoutManager(new GridLayoutManager(this, 3));
+        carRecycler.setLayoutManager(new GridLayoutManager(this, 3));
 
         ItemOffsetDecoration itemDecoration = new ItemOffsetDecoration(this, R.dimen.item_offset);
-        recycler.addItemDecoration(itemDecoration);
+        carRecycler.addItemDecoration(itemDecoration);
 
-        adapter = new MyAdapter(carPhotos, getApplicationContext(), false, null);
-        adapter.addPlus();
-        recycler.setAdapter(adapter);
+        carAdapter = new MyAdapter(carPhotos, getApplicationContext(), false, null);
+        carAdapter.addPlus();
+        carRecycler.setAdapter(carAdapter);
+
+        // docs
+        docsRecycler = (RecyclerView) findViewById(R.id.docsRecycler);
+        docsRecycler.setHasFixedSize(true);
+        docsRecycler.setNestedScrollingEnabled(false);
+
+        docsRecycler.setLayoutManager(new GridLayoutManager(this, 3));
+        docsRecycler.addItemDecoration(itemDecoration);
+
+        docsAdapter = new MyAdapter(docsPhotos, getApplicationContext(), false, null);
+        docsAdapter.addPlus();
+        docsRecycler.setAdapter(docsAdapter);
+
+        findViewById(R.id.finish).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(getApplicationContext(), SendActivity.class));
+            }
+        });
+
+        //((ScrollView)findViewById(R.id.scrollView)).fullScroll(ScrollView.FOCUS_UP);
 
     }
 
@@ -55,16 +88,18 @@ public class CheckActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("info", MODE_PRIVATE);
 
         // Personal data
-        String name = prefs.getString("surname", "");
+        name = prefs.getString("surname", "");
         name += " " + prefs.getString("name", "");
         name += " " + prefs.getString("second_name", "");
         Log.i("LOL", name);
         ((TextView) findViewById(R.id.name)).setText(name);
-        ((TextView) findViewById(R.id.phone)).setText(prefs.getString("phone", ""));
-        ((TextView) findViewById(R.id.email)).setText(prefs.getString("email", ""));
+        phone = prefs.getString("phone", "");
+        ((TextView) findViewById(R.id.phone)).setText(phone);
+        email = prefs.getString("email", "");
+        ((TextView) findViewById(R.id.email)).setText(email);
 
         // Car
-        String carName = prefs.getString("brand", "");
+        carName = prefs.getString("brand", "");
         carName += " " + prefs.getString("model", "");
         String year = " " + prefs.getString("year", "");
         if (!year.equals(" "))
@@ -80,6 +115,13 @@ public class CheckActivity extends AppCompatActivity {
         }
 
         // Docs
+        docsPhotos = new ArrayList<>();
+
+        for (int i = 0; i < prefs.getInt("doc_photos_size", 0); i++) {
+            String uri = prefs.getString("doc_photo" + i, "");
+            if (!uri.equals(""))
+                docsPhotos.add(Uri.parse(uri));
+        }
 
 
     }

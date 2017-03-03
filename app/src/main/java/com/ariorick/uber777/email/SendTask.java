@@ -1,5 +1,6 @@
 package com.ariorick.uber777.email;
 
+import android.app.ProgressDialog;
 import android.content.ContentUris;
 import android.content.Context;
 import android.database.Cursor;
@@ -12,25 +13,28 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.File;
 import java.net.URISyntaxException;
 import java.util.ArrayList;
 
-/**
- * Created by arior on 01.02.2017.
- */
 
-class SendTask extends AsyncTask<Object, String, Boolean> {
-    Context mainContext;
-    String subject;
-    String body;
-    String sender;
-    String recipients;
-    String[] filenames;
-    String user;
-    String password;
+public class SendTask extends AsyncTask<Object, String, Boolean> {
+    private Context mainContext;
+    private String subject;
+    private String body;
+    private String sender;
+    private String recipients;
+    private String[] filenames;
+    private String user;
+    private String password;
+    private boolean canBeSent;
 
-    public SendTask(Context mainContext, String subject, String body, String sender, String recipients, ArrayList<Uri> uris, String user, String password) {
+    private ProgressDialog dialog;
+
+    public SendTask(Context mainContext, String subject, String body,
+                    String sender, String recipients, ArrayList<Uri> uris, String user, String password, ProgressDialog dialog) {
         this.mainContext = mainContext;
+        this.dialog = dialog;
         this.subject = subject;
         this.body = body;
         this.sender = sender;
@@ -42,27 +46,56 @@ class SendTask extends AsyncTask<Object, String, Boolean> {
 
     @Override
     protected void onPreExecute() {
-        //WaitingDialog = ProgressDialog.show(mainContext, "Отправка данных", "Отправляем сообщение...", true);
+        Log.i("canBeSent ", "" + canBeSent);
+        canBeSent = canBeSent(filenames);
+
+
+
     }
 
     @Override
     protected void onPostExecute(Boolean result) {
-        //WaitingDialog.dismiss();
-        Toast.makeText(mainContext, "Отправка завершена", Toast.LENGTH_LONG).show();
+        if (dialog.isShowing())
+            dialog.dismiss();
+        if (result)
+            Toast.makeText(mainContext, "Отправка завершена", Toast.LENGTH_LONG).show();
+        else Toast.makeText(mainContext, "Ошибка отправки", Toast.LENGTH_LONG).show();
+
     }
 
     @Override
     protected Boolean doInBackground(Object... params) {
 
-        try {
-            MailSenderClass mailSender = new MailSenderClass(user, password);
-            mailSender.sendMail(subject, body, sender, recipients, filenames);
-            return true;
-        } catch (Exception e) {
-            Toast.makeText(mainContext, "Ошибка отправки сообщения", Toast.LENGTH_SHORT).show();
+        if (canBeSent) {
+            Log.i("SendTask", " sending in one part");
+            try {
+                MailSenderClass mailSender = new MailSenderClass(user, password);
+                mailSender.sendMail(subject, body, sender, recipients, filenames);
+                return true;
+            } catch (Exception e) {
+                Log.e("SEND ERROR:  ", e.getMessage());
+                //Toast.makeText(mainContext, "Ошибка отправки сообщения", Toast.LENGTH_SHORT).show();
+            }
         }
-
         return false;
+    }
+
+    /**
+     * @param filenames список путей к файлам, размер которых необходимо посчитать
+     * @return -1 если картинки не помещаются даже в два письма
+     * или число картинок, которое можно отправить через первое
+     */
+    private boolean canBeSent(String[] filenames) {
+        int MAX_SIZE = 1024 * 24;
+        int size = 0;
+        for (int i = 0; i < filenames.length; i++) {
+            size += new File(filenames[i]).length() / 1024;
+        }
+        Log.i("size", "" + size);
+        Log.i("filenames length", "" + filenames.length);
+        if (size > MAX_SIZE)
+            return false;
+        else return true;
     }
 
     private String[] getPath(ArrayList<Uri> uris) {
@@ -78,7 +111,7 @@ class SendTask extends AsyncTask<Object, String, Boolean> {
         return files;
     }
 
-    public static String getFilePath(Context context, Uri uri) throws URISyntaxException {
+    private static String getFilePath(Context context, Uri uri) throws URISyntaxException {
         String selection = null;
         String[] selectionArgs = null;
         // Uri is different in versions after KITKAT (Android 4.4), we need to
@@ -128,15 +161,15 @@ class SendTask extends AsyncTask<Object, String, Boolean> {
         return null;
     }
 
-    public static boolean isExternalStorageDocument(Uri uri) {
+    private static boolean isExternalStorageDocument(Uri uri) {
         return "com.android.externalstorage.documents".equals(uri.getAuthority());
     }
 
-    public static boolean isDownloadsDocument(Uri uri) {
+    private static boolean isDownloadsDocument(Uri uri) {
         return "com.android.providers.downloads.documents".equals(uri.getAuthority());
     }
 
-    public static boolean isMediaDocument(Uri uri) {
+    private static boolean isMediaDocument(Uri uri) {
         return "com.android.providers.media.documents".equals(uri.getAuthority());
     }
 
