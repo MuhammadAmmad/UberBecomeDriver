@@ -14,6 +14,7 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.CardView;
 import android.view.View;
+import android.widget.Toast;
 
 import com.ariorick.uber777.R;
 
@@ -38,11 +39,22 @@ public class DocumentsActivity extends AppCompatActivity {
         findViewById(R.id.continueToCheck).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(DocumentsActivity.this, CheckActivity.class));
+                if (everythingIsFine())
+                    startActivity(new Intent(DocumentsActivity.this, CheckActivity.class));
+                else
+                    Toast.makeText(DocumentsActivity.this, "Необходимо добавить все документы", Toast.LENGTH_SHORT).show();
             }
         });
 
         load();
+    }
+
+    public boolean everythingIsFine() {
+        for (Uri uri : docsPhotos) {
+            if (uri == null)
+                return false;
+        }
+        return true;
     }
 
     public void addPhoto(int docNumber) {
@@ -79,7 +91,6 @@ public class DocumentsActivity extends AppCompatActivity {
 
         startActivityForResult(chooser, 1);
     }
-
 
     public void onClick(View v) {
         switch (v.getId()) {

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">UBER 777</string>
+    <string name="app_name">UBER Стань Водителем</string>
     <string name="title_cars">Ваша машина</string>
     <string name="title_personal_data">Личная информация</string>
     <string name="title_documents">Документы</string>
@@ -8,6 +8,8 @@
     <string name="start_registration">Начать регистрацию</string>
     <string name="next">Продолжить</string>
     <string name="finish">Всё верно!</string>
+    <string name="try_again">Попробовать ещё раз</string>
+    <string name="exit">Завершить</string>
 
     <string name="check">✔ </string>
 
@@ -17,7 +19,7 @@
     <string name="doc4">Страховой полис ОСАГО</string>
     <string name="doc5">Свидетельство о регистрации ТС (страница с автомобилем)</string>
 
-    <string name="introduction">Приветствуем вас в программе регистрации новых водителей Uber 777!
+    <string name="introduction">Приветствуем вас в программе регистрации новых водителей Uber Стань Водителем!
         Для участия вам потребуется указать ваши персональные данные, информацию о своём автомобиле и сделать несколько фотографий.</string>
     <string name="we_need_car_photos">Добавьте фотографии машины спереди под углом (должен быть виден номер).</string>
     <string name="we_need_documents">Для продолжения, пожалуйста, сделайте и добавьте фотографии следующх документов:
@@ -25,6 +27,8 @@
     <string name="we_need_documents_reminder">Напоминаем, требуются следующие документы: паспорт (первая страница и регистрация),
         водительское удостоверение, страховой полис ОСАГО и свидетельство о регистрации ТС (страница с автомобилем).</string>
     <string name="check_everything">Если вы обнаружили какие-то ошибки, вы можете вернуться и исправить любое поле. Вся информация сохраняется.</string>
+    <string name="final_success">Поздравляем с завершением регистрации! С вами свяжутся в ближайшее время по указанному вами телефону или email.</string>
+    <string name="final_error">Что-то пошло не так. Проверьте соединение с сетью и попробуйте снова.</string>
     <string name="choose_photo">Выберите фотографии машины</string>
 
     <string name="model">Модель:</string>

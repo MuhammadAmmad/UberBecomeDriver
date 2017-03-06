@@ -4,10 +4,10 @@
 
 
     <style name="AppTheme" parent="Theme.AppCompat.Light">
-        <item name="colorPrimary">@color/violet</item>
-        <item name="colorPrimaryDark">#201a28</item>
-        <item name="colorAccent">@color/colorPrimary</item>
-        <item name="android:colorBackground">@color/almost_white</item>
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorBackground">@color/colorBackground</item>
         <!--item name="android:textColorPrimary">@color/white</item-->
     </style>
 
@@ -15,8 +15,8 @@
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/violet</item>
         <item name="colorPrimaryDark">#201a28</item>
-        <item name="colorAccent">@color/colorPrimary</item>
-        <item name="android:colorBackground">@color/almost_white</item>
+        <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:colorBackground">@color/colorBackground</item>
     </style>
 
 

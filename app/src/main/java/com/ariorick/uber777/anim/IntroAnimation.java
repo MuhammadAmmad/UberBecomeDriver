@@ -45,8 +45,6 @@ public class IntroAnimation extends AnimationSet {
         setAnimationListener(new AnimationListener() {
             @Override
             public void onAnimationStart(Animation animation) {
-
-
             }
 
             @Override

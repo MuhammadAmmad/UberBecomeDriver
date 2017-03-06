@@ -126,7 +126,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/carsCard"
-        android:layout_above="@+id/continueToDocs">
+        android:layout_above="@+id/finalbtn">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -163,7 +163,7 @@
         android:layout_height="wrap_content"
         android:background="@drawable/button"
         android:textColor="@color/white"
-        android:id="@+id/continueToDocs"
+        android:id="@+id/finalbtn"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="10dp" />

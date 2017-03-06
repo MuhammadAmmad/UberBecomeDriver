@@ -11,7 +11,8 @@ import android.os.Environment;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.widget.Toast;
+
+import com.ariorick.uber777.utils.ActivityCallback;
 
 import java.io.File;
 import java.net.URISyntaxException;
@@ -20,6 +21,7 @@ import java.util.ArrayList;
 
 public class SendTask extends AsyncTask<Object, String, Boolean> {
     private Context mainContext;
+    private ActivityCallback activityCallback;
     private String subject;
     private String body;
     private String sender;
@@ -34,6 +36,7 @@ public class SendTask extends AsyncTask<Object, String, Boolean> {
     public SendTask(Context mainContext, String subject, String body,
                     String sender, String recipients, ArrayList<Uri> uris, String user, String password, ProgressDialog dialog) {
         this.mainContext = mainContext;
+        this.activityCallback = (ActivityCallback) mainContext;
         this.dialog = dialog;
         this.subject = subject;
         this.body = body;
@@ -57,9 +60,8 @@ public class SendTask extends AsyncTask<Object, String, Boolean> {
     protected void onPostExecute(Boolean result) {
         if (dialog.isShowing())
             dialog.dismiss();
-        if (result)
-            Toast.makeText(mainContext, "Отправка завершена", Toast.LENGTH_LONG).show();
-        else Toast.makeText(mainContext, "Ошибка отправки", Toast.LENGTH_LONG).show();
+        if (result) activityCallback.onSuccess();
+        else activityCallback.onError();
 
     }
 

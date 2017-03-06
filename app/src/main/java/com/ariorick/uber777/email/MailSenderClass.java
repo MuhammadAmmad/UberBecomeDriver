@@ -71,36 +71,32 @@ class MailSenderClass extends javax.mail.Authenticator {
         return new PasswordAuthentication(user, password);
     }
 
-    public synchronized void sendMail(String subject, String body, String sender, String recipients, String[] filenames) {
-        try {
-            final MimeMessage message = new MimeMessage(session);
+    public synchronized void sendMail(String subject, String body, String sender, String recipients, String[] filenames) throws Exception {
+        final MimeMessage message = new MimeMessage(session);
 
-            // кто
-            message.setSender(new InternetAddress(sender));
-            // о чём
-            message.setSubject(subject);
-            // кому
-            if (recipients.indexOf(',') > 0)
-                message.setRecipients(Message.RecipientType.TO,
-                        InternetAddress.parse(recipients));
-            else
-                message.setRecipient(Message.RecipientType.TO,
-                        new InternetAddress(recipients));
+        // кто
+        message.setSender(new InternetAddress(sender));
+        // о чём
+        message.setSubject(subject);
+        // кому
+        if (recipients.indexOf(',') > 0)
+            message.setRecipients(Message.RecipientType.TO,
+                    InternetAddress.parse(recipients));
+        else
+            message.setRecipient(Message.RecipientType.TO,
+                    new InternetAddress(recipients));
 
-            // хочет сказать
-            BodyPart messageBodyPart = new MimeBodyPart();
-            messageBodyPart.setText(body);
-            _multipart.addBodyPart(messageBodyPart);
+        // хочет сказать
+        BodyPart messageBodyPart = new MimeBodyPart();
+        messageBodyPart.setText(body);
+        _multipart.addBodyPart(messageBodyPart);
 
-            // и что показать
-            if (filenames != null) {
-                addAttachments(filenames);
-            }
-
-            message.setContent(_multipart);
-            Transport.send(message);
-        } catch (Exception e) {
-            Log.e("sendMail", e.toString());
+        // и что показать
+        if (filenames != null) {
+            addAttachments(filenames);
         }
+
+        message.setContent(_multipart);
+        Transport.send(message);
     }
 }

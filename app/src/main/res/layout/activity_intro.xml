@@ -5,7 +5,8 @@
     android:id="@+id/introLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ariorick.uber777.activities.IntroActivity">
+    tools:context="com.ariorick.uber777.activities.IntroActivity"
+    android:background="@color/white">
 
     <ImageView
         app:srcCompat="@drawable/uber_logo"

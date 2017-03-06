@@ -26,6 +26,7 @@ import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ariorick.uber777.R;
 import com.ariorick.uber777.utils.ItemOffsetDecoration;
@@ -73,7 +74,7 @@ public class CarPickerActivity extends AppCompatActivity implements View.OnClick
         workWithAutoComplete1();
 
         // button to next activity
-        findViewById(R.id.continueToDocs).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.finalbtn).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 if (everythingIsFine())
@@ -105,12 +106,10 @@ public class CarPickerActivity extends AppCompatActivity implements View.OnClick
             return false;
         if (!yearIsFine(findViewById(R.id.year)))
             return false;
-        /*
         if (carPhotos.size() < 2){
-            Toast.makeText(CarPickerActivity.this, "Необходимо добавить хотя бы две фотографии", Toast.LENGTH_SHORT).show();
+            Toast.makeText(CarPickerActivity.this, "Необходимо добавить хотя бы одну фотографии", Toast.LENGTH_SHORT).show();
             return false;
         }
-        */
 
         return true;
     }
