@@ -68,6 +68,7 @@ public class SendActivity extends AppCompatActivity implements ActivityCallback 
 
     @Override
     public void onError() {
+        dialog.dismiss();
         Toast.makeText(this, "Ошибка отправки", Toast.LENGTH_LONG).show();
         ((TextView) findViewById(R.id.textView)).setText(getString(R.string.final_error));
 
@@ -93,7 +94,8 @@ public class SendActivity extends AppCompatActivity implements ActivityCallback 
                     "UBER777", sendTo, photos, getString(R.string.google_user), getString(R.string.google_password), dialog);
             sendTask.execute();
         } catch (Exception e) {
-            Log.e("Exception", e.getMessage());
+            if (e.getMessage() != null)
+                Log.e("Exception", e.getMessage());
         }
     }
 

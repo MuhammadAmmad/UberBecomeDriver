@@ -49,15 +49,14 @@ public class SendTask extends AsyncTask<Object, String, Boolean> {
 
     @Override
     protected void onPreExecute() {
+        //canBeSent = canBeSent(filenames);
+        canBeSent = true;
         Log.i("canBeSent ", "" + canBeSent);
-        canBeSent = canBeSent(filenames);
-
-
-
     }
 
     @Override
     protected void onPostExecute(Boolean result) {
+        Log.i("task result ", "" + result);
         if (dialog.isShowing())
             dialog.dismiss();
         if (result) activityCallback.onSuccess();
@@ -76,6 +75,7 @@ public class SendTask extends AsyncTask<Object, String, Boolean> {
                 return true;
             } catch (Exception e) {
                 Log.e("SEND ERROR:  ", e.getMessage());
+                return false;
                 //Toast.makeText(mainContext, "Ошибка отправки сообщения", Toast.LENGTH_SHORT).show();
             }
         }
@@ -90,8 +90,11 @@ public class SendTask extends AsyncTask<Object, String, Boolean> {
     private boolean canBeSent(String[] filenames) {
         int MAX_SIZE = 1024 * 24;
         int size = 0;
-        for (int i = 0; i < filenames.length; i++) {
-            size += new File(filenames[i]).length() / 1024;
+        Log.i("Startedcalculating if", " can be sent");
+        for (String filename : filenames) {
+            File file = new File(filename);
+            Log.i("added temp file", "");
+            size += file.length() / 1024;
         }
         Log.i("size", "" + size);
         Log.i("filenames length", "" + filenames.length);

@@ -12,7 +12,6 @@ import android.os.Environment;
 import android.os.Parcelable;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.Toast;
 
@@ -117,27 +116,23 @@ public class DocumentsActivity extends AppCompatActivity {
     public void setChecked(int number) {
         switch (number) {
             case 1:
-                setMarkVisible(R.id.card1);
+                findViewById(R.id.check1).setVisibility(View.VISIBLE);
                 break;
             case 2:
-                setMarkVisible(R.id.card2);
+                findViewById(R.id.check2).setVisibility(View.VISIBLE);
                 break;
             case 3:
-                setMarkVisible(R.id.card3);
+                findViewById(R.id.check3).setVisibility(View.VISIBLE);
                 break;
             case 4:
-                setMarkVisible(R.id.card4);
+                findViewById(R.id.check4).setVisibility(View.VISIBLE);
                 break;
             case 5:
-                setMarkVisible(R.id.card5);
+                findViewById(R.id.check5).setVisibility(View.VISIBLE);
                 break;
         }
     }
 
-    private void setMarkVisible(int id) {
-        CardView cardView = (CardView) findViewById(id);
-        cardView.findViewById(R.id.check).setVisibility(View.VISIBLE);
-    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {

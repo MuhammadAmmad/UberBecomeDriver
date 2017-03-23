@@ -47,10 +47,10 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:id="@+id/check"
+                    android:id="@+id/check1"
                     android:layout_weight="1"
                     android:text="@string/check"
-                    android:textColor="@android:color/holo_green_dark"
+                    android:textColor="@color/colorPrimary"
                     android:gravity="center_vertical"
                     android:visibility="invisible"
                     android:paddingLeft="5dp" />
@@ -94,10 +94,10 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:id="@+id/check"
+                    android:id="@+id/check2"
                     android:layout_weight="1"
                     android:text="@string/check"
-                    android:textColor="@android:color/holo_green_dark"
+                    android:textColor="@color/colorPrimary"
                     android:gravity="center_vertical"
                     android:visibility="invisible"
                     android:paddingLeft="5dp" />
@@ -140,10 +140,10 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:id="@+id/check"
+                    android:id="@+id/check3"
                     android:layout_weight="1"
                     android:text="@string/check"
-                    android:textColor="@android:color/holo_green_dark"
+                    android:textColor="@color/colorPrimary"
                     android:gravity="center_vertical"
                     android:visibility="invisible"
                     android:paddingLeft="5dp" />
@@ -187,10 +187,10 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:id="@+id/check"
+                    android:id="@+id/check4"
                     android:layout_weight="1"
                     android:text="@string/check"
-                    android:textColor="@android:color/holo_green_dark"
+                    android:textColor="@color/colorPrimary"
                     android:gravity="center_vertical"
                     android:visibility="invisible"
                     android:paddingLeft="5dp" />
@@ -234,10 +234,10 @@
                 <TextView
                     android:layout_width="0dp"
                     android:layout_height="match_parent"
-                    android:id="@+id/check"
+                    android:id="@+id/check5"
                     android:layout_weight="1"
                     android:text="@string/check"
-                    android:textColor="@android:color/holo_green_dark"
+                    android:textColor="@color/colorPrimary"
                     android:gravity="center_vertical"
                     android:visibility="invisible"
                     android:paddingLeft="5dp" />

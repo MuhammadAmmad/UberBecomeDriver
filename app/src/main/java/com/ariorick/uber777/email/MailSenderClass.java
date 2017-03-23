@@ -74,6 +74,7 @@ class MailSenderClass extends javax.mail.Authenticator {
     public synchronized void sendMail(String subject, String body, String sender, String recipients, String[] filenames) throws Exception {
         final MimeMessage message = new MimeMessage(session);
 
+        Log.i("MailSender", "started sending");
         // кто
         message.setSender(new InternetAddress(sender));
         // о чём
@@ -92,6 +93,7 @@ class MailSenderClass extends javax.mail.Authenticator {
         _multipart.addBodyPart(messageBodyPart);
 
         // и что показать
+        Log.i("MailSender", "started adding attachments");
         if (filenames != null) {
             addAttachments(filenames);
         }
