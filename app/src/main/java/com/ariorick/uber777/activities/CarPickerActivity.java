@@ -106,8 +106,8 @@ public class CarPickerActivity extends AppCompatActivity implements View.OnClick
             return false;
         if (!yearIsFine(findViewById(R.id.year)))
             return false;
-        if (carPhotos.size() < 2){
-            Toast.makeText(CarPickerActivity.this, "Необходимо добавить хотя бы одну фотографии", Toast.LENGTH_SHORT).show();
+        if (carPhotos.size() < 3) {
+            Toast.makeText(CarPickerActivity.this, "Необходимо добавить хотя бы две фотографии", Toast.LENGTH_SHORT).show();
             return false;
         }
 
@@ -119,8 +119,7 @@ public class CarPickerActivity extends AppCompatActivity implements View.OnClick
         if (edit.getText().toString().length() != 4) {
             edit.setError("Год должен состоять из четырёх цифр");
             return false;
-        }
-        if (Integer.parseInt(edit.getText().toString()) > Calendar.getInstance().get(Calendar.YEAR)) {
+        } else if (Integer.parseInt(edit.getText().toString()) > Calendar.getInstance().get(Calendar.YEAR)) {
             edit.setError("Вы обещаете купить машину в будущем? :)");
             return false;
         }

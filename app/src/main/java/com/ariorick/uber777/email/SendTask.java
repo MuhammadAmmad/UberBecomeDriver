@@ -74,7 +74,6 @@ public class SendTask extends AsyncTask<Object, String, Boolean> {
                 mailSender.sendMail(subject, body, sender, recipients, filenames);
                 return true;
             } catch (Exception e) {
-                Log.e("SEND ERROR:  ", e.getMessage());
                 return false;
                 //Toast.makeText(mainContext, "Ошибка отправки сообщения", Toast.LENGTH_SHORT).show();
             }

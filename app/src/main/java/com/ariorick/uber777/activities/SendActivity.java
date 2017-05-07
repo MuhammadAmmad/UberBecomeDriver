@@ -137,8 +137,8 @@ public class SendActivity extends AppCompatActivity implements ActivityCallback 
         // Docs
         ArrayList<Uri> docsPhotos = new ArrayList<>();
 
-        for (int i = 0; i < 5; i++) {
-            String uri = prefs.getString("doc_photo" + i, "");
+        for (int i = 0; i < 7; i++) {
+            String uri = prefs.getString("docPhoto" + i, "");
             if (!uri.equals(""))
                 docsPhotos.add(Uri.parse(uri));
         }

@@ -111,7 +111,8 @@
                 android:layout_alignBottom="@+id/textView"
                 android:layout_toRightOf="@+id/textView"
                 android:layout_toEndOf="@+id/textView"
-                android:text="@string/phone_start" />
+                android:text="@string/phone_start"
+                android:hint="+79991205577" />
 
             <TextView
                 android:text="@string/email"
@@ -136,7 +137,8 @@
                 android:layout_alignBottom="@+id/textView2"
                 android:layout_alignLeft="@+id/phone"
                 android:layout_alignStart="@+id/phone"
-                android:layout_marginBottom="10dp" />
+                android:layout_marginBottom="10dp"
+                android:hint="example@gmail.com" />
 
 
         </RelativeLayout>

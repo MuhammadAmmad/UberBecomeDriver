@@ -26,7 +26,7 @@ public class DocumentsActivity extends AppCompatActivity {
 
     private Uri outputFileUri;
 
-    private Uri[] docsPhotos = new Uri[5];
+    private Uri[] docsPhotos = new Uri[7];
     private int clickedViewnumber = 0;
 
     @Override
@@ -108,6 +108,12 @@ public class DocumentsActivity extends AppCompatActivity {
             case R.id.add5:
                 addPhoto(5);
                 break;
+            case R.id.add6:
+                addPhoto(6);
+                break;
+            case R.id.add7:
+                addPhoto(7);
+                break;
 
         }
 
@@ -130,8 +136,15 @@ public class DocumentsActivity extends AppCompatActivity {
             case 5:
                 findViewById(R.id.check5).setVisibility(View.VISIBLE);
                 break;
+            case 6:
+                findViewById(R.id.check6).setVisibility(View.VISIBLE);
+                break;
+            case 7:
+                findViewById(R.id.check7).setVisibility(View.VISIBLE);
+                break;
         }
     }
+
 
 
     @Override
@@ -154,9 +167,9 @@ public class DocumentsActivity extends AppCompatActivity {
         SharedPreferences prefs = getSharedPreferences("info", MODE_PRIVATE);
         SharedPreferences.Editor editor = prefs.edit();
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 7; i++) {
             if (docsPhotos[i] != null)
-                editor.putString("doc_photo" + i, docsPhotos[i].toString());
+                editor.putString("docPhoto" + i, docsPhotos[i].toString());
         }
 
         editor.apply();
@@ -165,10 +178,10 @@ public class DocumentsActivity extends AppCompatActivity {
     public void load() {
         SharedPreferences prefs = getSharedPreferences("info", MODE_PRIVATE);
 
-        docsPhotos = new Uri[5];
+        docsPhotos = new Uri[7];
 
-        for (int i = 0; i < 5; i++) {
-            String uri = prefs.getString("doc_photo" + i, "");
+        for (int i = 0; i < 7; i++) {
+            String uri = prefs.getString("docPhoto" + i, "");
             if (!uri.equals("")) {
                 docsPhotos[i] = Uri.parse(uri);
                 setChecked(i + 1);

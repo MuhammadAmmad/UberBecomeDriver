@@ -68,7 +68,7 @@ public class IntroAnimation extends AnimationSet {
                 RelativeLayout relativeLayout = (RelativeLayout) introActivity.findViewById(R.id.introLayout);
                 TextView tv = new TextView(introActivity);
                 tv.setText(introActivity.getString(R.string.introduction));
-                tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20);
+                tv.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18);
                 tv.setGravity(Gravity.CENTER);
                 tv.setTextColor(Color.BLACK);
 
